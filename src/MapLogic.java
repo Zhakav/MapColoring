@@ -1,30 +1,63 @@
-import java.util.Objects;
-import java.util.Random;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.awt.*;
+import java.util.*;
 
-// 
-// Decompiled by Procyon v0.5.36
-// 
+public class MapLogic {
 
-public class Map
-{
     private LinkedList<Integer>[] adjacency;
     private int[] countryColor;
     private boolean[] colorAvailable;
+    private HashMap<Integer, Color> colors;
+    private HashMap<Integer, Shape> countries;
     private int colorCount;
     private int countryCount;
-    private HashMap<Integer, MyColor> colors;
-    private HashMap<Integer, Country> countries;
-    
-    Map() {
-        this.colorCount = 0;
-        this.countryCount = 0;
-        this.colors = new HashMap<Integer, MyColor>();
-        this.countries = new HashMap<Integer, Country>();
+
+    MapLogic(MapGUI map){
+
+        countries = map.getCountries();
+        setColors();
+        countryCount = countries.size();
+        colorCount = colors.size();
+
     }
-    
+
+    private void setColors(){
+
+        colors.putIfAbsent(0,Color.RED);
+        colors.putIfAbsent(1,Color.BLUE);
+        colors.putIfAbsent(2,Color.GREEN);
+        colors.putIfAbsent(3,Color.MAGENTA);
+        colors.putIfAbsent(4,Color.YELLOW);
+        colors.putIfAbsent(5,Color.PINK);
+        colors.putIfAbsent(6,Color.ORANGE);
+
+    }
+
+    private int getColorKey(final Color color) {
+        int result = -1;
+        if (this.colors.containsValue(color)) {
+            for (final java.util.Map.Entry<Integer, Color> entry : this.colors.entrySet()) {
+                if (Objects.equals(entry.getValue(), color)) {
+                    result = entry.getKey();
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private int getCountryKey(final Shape country) {
+        int result = -1;
+        if (this.colors.containsValue(country)) {
+            for (final java.util.Map.Entry<Integer, Shape> entry : this.countries.entrySet()) {
+                if (Objects.equals(entry.getValue(), country)) {
+                    result = entry.getKey();
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
     public void createMap() {
         this.adjacency = (LinkedList<Integer>[])new LinkedList[this.countryCount];
         for (int i = 0; i < this.countryCount; ++i) {
@@ -33,32 +66,12 @@ public class Map
         Arrays.fill(this.countryColor = new int[this.countryCount], -1);
         this.colorAvailable = new boolean[this.colorCount];
     }
-    
-    public void addCountry(final Country country) {
-        this.countries.putIfAbsent(this.countryCount, country);
-        ++this.countryCount;
-    }
-    
-    public void addColor(final MyColor color) {
-        this.colors.putIfAbsent(this.colorCount, color);
-        ++this.colorCount;
-    }
-    
-    public void resetCountryColor(final Country country) {
-        final int countryKey = this.getCountryKey(country);
-        if (countryKey != -1) {
-            this.countryColor[countryKey] = -1;
-        }
-        else {
-            System.out.println("Country Doesn't Exist In Our Database\nPlease Add It First And Try Again");
-        }
-    }
-    
+
     public void resetAll() {
         Arrays.fill(this.countryColor, -1);
     }
-    
-    public void addEdge(final Country c1, final Country c2) {
+
+    public void addEdge(final Shape c1, final Shape c2) {
         if (this.getCountryKey(c1) != -1 && this.getCountryKey(c2) != -1) {
             this.adjacency[this.getCountryKey(c1)].offerFirst(this.getCountryKey(c2));
             this.adjacency[this.getCountryKey(c2)].offerFirst(this.getCountryKey(c1));
@@ -67,7 +80,7 @@ public class Map
             System.out.println("The country doesnt Exist in our database!!!!");
         }
     }
-    
+
     public void greedyColoring() throws InterruptedException {
         this.countryColor[0] = 0;
         Arrays.fill(this.colorAvailable, true);
@@ -79,18 +92,18 @@ public class Map
             }
             int color;
             for (color = 0; color < this.colorCount && !this.colorAvailable[color]; ++color) {}
-
+            if (this.colorCount <= color) {
+                System.out.println("Not enough colors to coloring the.....\nPlease add more colors and try again");
+                Thread.sleep(1000L);
+                this.resetAll();
+                break;
+            }
             this.countryColor[i] = color;
             Arrays.fill(this.colorAvailable, true);
-            for (final int neighbor2 : this.adjacency[i]) {
-                if (this.countryColor[neighbor2] != -1) {
-                    this.colorAvailable[this.countryColor[neighbor2]] = false;
-                }
-            }
         }
     }
-    
-    public void colorTheCountry(final Country country, final MyColor color) {
+
+    public void colorTheCountry(final Shape country, final Color color) {
         Arrays.fill(this.colorAvailable, true);
         final int colorKey = this.getColorKey(color);
         final int countryKey = this.getCountryKey(country);
@@ -112,7 +125,7 @@ public class Map
         }
         Arrays.fill(this.colorAvailable, true);
     }
-    
+
     public void randomColoring() {
         Arrays.fill(this.colorAvailable, true);
         final Random random = new Random();
@@ -133,41 +146,5 @@ public class Map
             Arrays.fill(this.colorAvailable, true);
         }
     }
-    
-    public void printMap() {
-        for (int i = 0; i < this.countryCount; ++i) {
-            if (this.countryColor[i] != -1) {
-                System.out.println( this.countries.get(i).getName() + "----------> " + this.colors.get(this.countryColor[i]).getName());
-            }
-            else {
-                System.out.println( this.countries.get(i).getName() + "----------> Uncolored" );
-            }
-        }
-    }
-    
-    private int getCountryKey(final Country country) {
-        int result = -1;
-        if (this.countries.containsValue(country)) {
-            for (final java.util.Map.Entry<Integer, Country> entry : this.countries.entrySet()) {
-                if (Objects.equals(entry.getValue(), country)) {
-                    result = entry.getKey();
-                    break;
-                }
-            }
-        }
-        return result;
-    }
-    
-    private int getColorKey(final MyColor color) {
-        int result = -1;
-        if (this.colors.containsValue(color)) {
-            for (final java.util.Map.Entry<Integer, MyColor> entry : this.colors.entrySet()) {
-                if (Objects.equals(entry.getValue(), color)) {
-                    result = entry.getKey();
-                    break;
-                }
-            }
-        }
-        return result;
-    }
+
 }

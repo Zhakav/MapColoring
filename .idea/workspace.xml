@@ -29,11 +29,21 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../JavaFxExercise" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Maps" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="S:\programing\Java\Udemy\JavaFx\MapColoring\src\Maps" />
+      <recent name="S:\programing\Java\Udemy\JavaFx\MapColoring\src\Images" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="S:\programing\Java\Udemy\JavaFx\MapColoring\src\Maps" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
@@ -63,6 +73,13 @@
       <updated>1671804633543</updated>
       <workItem from="1671804637583" duration="1573000" />
       <workItem from="1671812854368" duration="1314000" />
+      <workItem from="1672235256485" duration="3303000" />
+      <workItem from="1672247541793" duration="12861000" />
+      <workItem from="1672299386920" duration="407000" />
+      <workItem from="1672299815654" duration="19000" />
+      <workItem from="1672300168538" duration="6272000" />
+      <workItem from="1672311105333" duration="10501000" />
+      <workItem from="1672325671898" duration="2000" />
     </task>
     <servers />
   </component>
