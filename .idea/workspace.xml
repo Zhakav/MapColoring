@@ -80,10 +80,48 @@
       <workItem from="1672300168538" duration="6272000" />
       <workItem from="1672311105333" duration="10501000" />
       <workItem from="1672325671898" duration="2000" />
+      <workItem from="1672336939816" duration="8218000" />
+      <workItem from="1672391350711" duration="7963000" />
+      <workItem from="1672434064399" duration="5609000" />
+      <workItem from="1672445315702" duration="4669000" />
+      <workItem from="1672506469853" duration="292000" />
+      <workItem from="1672857321533" duration="11721000" />
+      <workItem from="1672916908530" duration="12025000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/MapGUI.java</url>
+          <line>36</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/MapGUI.java</url>
+          <line>49</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/MapGUI.java</url>
+          <line>335</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/MapGUI.java</url>
+          <line>513</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/DataBase.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

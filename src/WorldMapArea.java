@@ -1,13 +1,15 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Area;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.PathIterator;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
 
 /*
  Outline code from:
@@ -15,13 +17,13 @@ import javax.imageio.ImageIO;
  */
 public class WorldMapArea {
 
-    private JComponent ui = null;
-    JLabel output = new JLabel();
     public int height;
     public int width;
+    JLabel output = new JLabel();
     BufferedImage image;
     Area area;
     ArrayList<Shape> shapeList;
+    private JComponent ui = null;
 
     public WorldMapArea() {
         try {
@@ -29,6 +31,88 @@ public class WorldMapArea {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static ArrayList<Shape> separateShapeIntoRegions(Shape shape) {
+        ArrayList<Shape> regions = new ArrayList<>();
+
+        PathIterator pi = shape.getPathIterator(null);
+        GeneralPath gp = new GeneralPath();
+        while (!pi.isDone()) {
+            double[] coords = new double[6];
+            int pathSegmentType = pi.currentSegment(coords);
+            int windingRule = pi.getWindingRule();
+            gp.setWindingRule(windingRule);
+            if (pathSegmentType == PathIterator.SEG_MOVETO) {
+                gp = new GeneralPath();
+                gp.setWindingRule(windingRule);
+                gp.moveTo(coords[0], coords[1]);
+            } else if (pathSegmentType == PathIterator.SEG_LINETO) {
+                gp.lineTo(coords[0], coords[1]);
+            } else if (pathSegmentType == PathIterator.SEG_QUADTO) {
+                gp.quadTo(coords[0], coords[1], coords[2], coords[3]);
+            } else if (pathSegmentType == PathIterator.SEG_CUBICTO) {
+                gp.curveTo(
+                        coords[0], coords[1],
+                        coords[2], coords[3],
+                        coords[4], coords[5]);
+            } else if (pathSegmentType == PathIterator.SEG_CLOSE) {
+                gp.closePath();
+                regions.add(new Area(gp));
+            } else {
+                System.err.println("Unexpected value! " + pathSegmentType);
+            }
+
+            pi.next();
+        }
+
+        return regions;
+    }
+
+    public static boolean isIncluded(Color target, Color pixel, int tolerance) {
+        int rT = target.getRed();
+        int gT = target.getGreen();
+        int bT = target.getBlue();
+        int rP = pixel.getRed();
+        int gP = pixel.getGreen();
+        int bP = pixel.getBlue();
+        return ((rP - tolerance <= rT) && (rT <= rP + tolerance)
+                && (gP - tolerance <= gT) && (gT <= gP + tolerance)
+                && (bP - tolerance <= bT) && (bT <= bP + tolerance));
+    }
+
+    public static void main(String[] args) {
+        Runnable r = () -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            WorldMapArea o = new WorldMapArea();
+
+            JFrame f = new JFrame(o.getClass().getSimpleName());
+            f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            f.setLocationByPlatform(true);
+
+            f.setContentPane(o.getUI());
+            f.setResizable(false);
+            f.pack();
+
+            f.setVisible(true);
+        };
+        SwingUtilities.invokeLater(r);
+    }
+
+    public static BufferedImage resize(BufferedImage img, int newW, int newH) {
+        int w = img.getWidth();
+        int h = img.getHeight();
+        BufferedImage dimg = new BufferedImage(newW, newH, img.getType());
+        Graphics2D g = dimg.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
+        g.dispose();
+        return dimg;
     }
 
     public final void initUI() throws Exception {
@@ -39,7 +123,7 @@ public class WorldMapArea {
         image = ImageIO.read(file);
         height = image.getHeight();
         width = image.getWidth();
-        image = resize(image , 750 * (width / height) , 750 );
+        image = resize(image, 750 * (width / height), 750);
         height = image.getHeight();
         width = image.getWidth();
         long then = System.currentTimeMillis();
@@ -89,67 +173,6 @@ public class WorldMapArea {
         return new Area(gp);
     }
 
-    public static ArrayList<Shape> separateShapeIntoRegions(Shape shape) {
-        ArrayList<Shape> regions = new ArrayList<>();
-
-        PathIterator pi = shape.getPathIterator(null);
-        GeneralPath gp = new GeneralPath();
-        while (!pi.isDone()) {
-            double[] coords = new double[6];
-            int pathSegmentType = pi.currentSegment(coords);
-            int windingRule = pi.getWindingRule();
-            gp.setWindingRule(windingRule);
-            if (pathSegmentType == PathIterator.SEG_MOVETO) {
-                gp = new GeneralPath();
-                gp.setWindingRule(windingRule);
-                gp.moveTo(coords[0], coords[1]);
-            } else if (pathSegmentType == PathIterator.SEG_LINETO) {
-                gp.lineTo(coords[0], coords[1]);
-            } else if (pathSegmentType == PathIterator.SEG_QUADTO) {
-                gp.quadTo(coords[0], coords[1], coords[2], coords[3]);
-            } else if (pathSegmentType == PathIterator.SEG_CUBICTO) {
-                gp.curveTo(
-                        coords[0], coords[1],
-                        coords[2], coords[3],
-                        coords[4], coords[5]);
-            } else if (pathSegmentType == PathIterator.SEG_CLOSE) {
-                gp.closePath();
-                regions.add(new Area(gp));
-            } else {
-                System.err.println("Unexpected value! " + pathSegmentType);
-            }
-
-            pi.next();
-        }
-
-        return regions;
-    }
-
-    class MousePositionListener implements MouseMotionListener {
-
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            // do nothing
-        }
-
-        @Override
-        public void mouseMoved(MouseEvent e) {
-            refresh();
-        }
-    }
-
-    public static boolean isIncluded(Color target, Color pixel, int tolerance) {
-        int rT = target.getRed();
-        int gT = target.getGreen();
-        int bT = target.getBlue();
-        int rP = pixel.getRed();
-        int gP = pixel.getGreen();
-        int bP = pixel.getBlue();
-        return ((rP - tolerance <= rT) && (rT <= rP + tolerance)
-                && (gP - tolerance <= gT) && (gT <= gP + tolerance)
-                && (bP - tolerance <= bT) && (bT <= bP + tolerance));
-    }
-
     private void refresh() {
         output.setIcon(new ImageIcon(getImage()));
     }
@@ -189,37 +212,16 @@ public class WorldMapArea {
         return ui;
     }
 
-    public static void main(String[] args) {
-        Runnable r = () -> {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            WorldMapArea o = new WorldMapArea();
+    class MousePositionListener implements MouseMotionListener {
 
-            JFrame f = new JFrame(o.getClass().getSimpleName());
-            f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            f.setLocationByPlatform(true);
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            // do nothing
+        }
 
-            f.setContentPane(o.getUI());
-            f.setResizable(false);
-            f.pack();
-
-            f.setVisible(true);
-        };
-        SwingUtilities.invokeLater(r);
-    }
-
-    public static BufferedImage resize(BufferedImage img, int newW, int newH) {
-        int w = img.getWidth();
-        int h = img.getHeight();
-        BufferedImage dimg = new BufferedImage(newW, newH, img.getType());
-        Graphics2D g = dimg.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);
-        g.dispose();
-        return dimg;
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            refresh();
+        }
     }
 }
