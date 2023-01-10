@@ -1,10 +1,13 @@
 
 public class Main
 {
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
 
+        MapCreatingFrame mapCreatingFrame=new MapCreatingFrame();
+        mapCreatingFrame.setVisible(true);
 
-        MyFrame frame=new MyFrame(new MapGUI());
-        frame.setVisible(true);
+        //WelcomeFrame welcomeFrame=new WelcomeFrame();
+        //welcomeFrame.setVisible(true);
+
     }
 }

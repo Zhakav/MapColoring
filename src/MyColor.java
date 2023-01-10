@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.HashMap;
 
 // 
@@ -6,32 +7,32 @@ import java.util.HashMap;
 
 public class MyColor
 {
-    private static int count;
-    private String name;
-    private final int id;
-    private static HashMap<Integer, String> colors;
-    
-    MyColor(final String name) {
-        this.id = MyColor.count;
-        this.name = name;
-        MyColor.colors.put(this.id, name);
-        ++MyColor.count;
+
+    public static void setColors(HashMap<Integer,Color> colors){
+
+        colors.putIfAbsent(0, Color.RED);
+        colors.putIfAbsent(1,Color.BLUE);
+        colors.putIfAbsent(2,Color.GREEN);
+        colors.putIfAbsent(3,Color.MAGENTA);
+        colors.putIfAbsent(4,Color.YELLOW);
+        colors.putIfAbsent(5,Color.PINK);
+        colors.putIfAbsent(6,Color.ORANGE);
+
     }
-    
-    public int getId() {
-        return this.id;
+
+    public static Color colorStringToObject(String colorString){
+
+        return switch (colorString) {
+            case "Red" -> Color.RED;
+            case "Blue" -> Color.BLUE;
+            case "Green" -> Color.GREEN;
+            case "Magenta" -> Color.MAGENTA;
+            case "Yellow" -> Color.YELLOW;
+            case "Pink" -> Color.PINK;
+            case "Orange" -> Color.ORANGE;
+            default -> null;
+        };
+
     }
-    
-    public String getName() {
-        return this.name;
-    }
-    
-    public static HashMap<Integer, String> getColors() {
-        return MyColor.colors;
-    }
-    
-    static {
-        MyColor.count = 0;
-        MyColor.colors = new HashMap<Integer, String>();
-    }
+
 }

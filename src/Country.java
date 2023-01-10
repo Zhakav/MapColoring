@@ -1,37 +1,26 @@
+import java.awt.*;
 import java.util.HashMap;
-
-// 
-// Decompiled by Procyon v0.5.36
-// 
 
 public class Country
 {
-    private static int count;
-    private final int id;
-    private String name;
-    private static HashMap<Integer, String> countries;
-    
-    Country(final String name) {
-        this.id = Country.count;
-        this.name = name;
-        Country.countries.put(this.id, name);
-        ++Country.count;
+
+    public static Shape findCountry(int x , int y , HashMap<Integer,Shape> countries){
+
+        Shape country=null;
+
+        Point point=new Point(x,y);
+
+        for (Shape X : countries.values()) {
+
+            if (X.contains(point)) {
+
+                country = X;
+                break;
+            }
+
+        }
+
+        return country;
     }
-    
-    public String getName() {
-        return this.name;
-    }
-    
-    public int getId() {
-        return this.id;
-    }
-    
-    public static int getCount() {
-        return Country.count;
-    }
-    
-    static {
-        Country.count = 0;
-        Country.countries = new HashMap<Integer, String>();
-    }
+
 }

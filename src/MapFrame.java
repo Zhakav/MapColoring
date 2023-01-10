@@ -2,13 +2,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-public class MyFrame extends JFrame {
+public class MapFrame extends JFrame {
 
 
-    MyFrame(MapGUI map)  {
+    MapFrame(MapGUI map)  {
 
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
