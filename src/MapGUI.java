@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class MapGUI {
@@ -21,7 +20,7 @@ public class MapGUI {
     private HashMap<Integer,Shape> countries;
     private HashMap<Integer,Color>  colors;
     private LinkedList<Integer>[] adjacency;
-    private JLabel output = new JLabel();
+    private final JLabel output = new JLabel();
     private  String mapName;
     
     private boolean[] colorAvailable;
@@ -51,27 +50,21 @@ public class MapGUI {
 
         String mapFileName;
 
-            switch (mapName){
-
-                case "IRAN" :
-                    mapFileName="IR.jpg";
-                    this.mapName="IR" ;
-                    break;
-
-                case "UNITED STATES":
-                    mapFileName="US.jpeg";
-                    this.mapName="US" ;
-                    break;
-
-                case "WORLD" :
-                    mapFileName="World.png";
-                    this.mapName="World" ;
-                    break;
-
-                default :
-                    throw new Exception("Invalid Unsused.Map!!!");
-
-        };
+        switch (mapName) {
+            case "IRAN" -> {
+                mapFileName = "IR.jpg";
+                this.mapName = "IR";
+            }
+            case "UNITED STATES" -> {
+                mapFileName = "US.jpeg";
+                this.mapName = "US";
+            }
+            case "WORLD" -> {
+                mapFileName = "World.png";
+                this.mapName = "World";
+            }
+            default -> throw new Exception("Invalid Unused.Map!!!");
+        }
 
         image=readImage("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Maps\\" + mapFileName);
         createMap(image);
@@ -280,60 +273,6 @@ public class MapGUI {
 
     }
 
-    private void addEdge(final Shape c1, final Shape c2)  {
-
-        int country1Key=GetKey.getCountryKey(c1 , countries);
-        int country2Key=GetKey.getCountryKey(c2 , countries);
-
-        boolean condition=(country1Key != -1 &&
-                country2Key != -1 &&
-                country2Key != country1Key&&
-                !this.adjacency[country1Key].contains(country2Key)
-        );
-
-        if ( condition){
-
-            this.adjacency[country1Key].offerFirst(country2Key);
-            this.adjacency[country2Key].offerFirst(country1Key);
-
-            showMessageDialog(null, "Edge Added Successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
-        }
-
-    }
-
-    private void colorTheCountry(final Shape country, final Color color) {
-
-        Arrays.fill(colorAvailable, true);
-
-        final int colorKey = GetKey.getColorKey(color , colors);
-        final int countryKey = GetKey.getCountryKey(country , countries);
-
-        if (countryKey != -1 && colorKey != -1) {
-
-            for (final int neighbor :adjacency[countryKey]) {
-
-                if (countryColor[neighbor] != -1) {
-
-                    colorAvailable[countryColor[neighbor]] = false;
-
-                }
-            }
-
-            if (colorAvailable[colorKey]) {
-
-                countryColor[countryKey] = colorKey;
-
-            }
-
-            else { showMessageDialog(null, "You Can't Color The Country With The Same Color Of It's Neighbor!!!!", "Error", ERROR_MESSAGE);}
-
-        }
-
-        else {showMessageDialog(null, "Color Or Country Doesn't Exist In Our Database Please\\nPlease Add Them And Try Again.....", "Error", ERROR_MESSAGE);}
-
-        Arrays.fill(colorAvailable, true);
-
-    }
 
     private void addAdjacency(Point mouseLocation) {
 
@@ -350,7 +289,9 @@ public class MapGUI {
 
             if (twoPointsCounter == 2) {
 
-                addEdge(twoPoints[0], twoPoints[1]);
+                if(MapLogic.addEdge(twoPoints[0], twoPoints[1],countries,adjacency))
+                    showMessageDialog(null, "Edge Added Successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
+
                 twoPointsCounter = 0;
 
             }
@@ -359,81 +300,6 @@ public class MapGUI {
     }
 
     public JLabel getOutput() {return output;}
-
-    public void resetAll() {
-
-        Arrays.fill(this.countryColor, -1);
-
-        refresh();
-
-    }
-
-    public void greedyColoring() throws InterruptedException {
-
-        this.countryColor[0] = 0;
-        Arrays.fill(colorAvailable, true);
-
-        for (int i = 1; i < countries.size(); ++i) {
-
-            for (final int neighbor : adjacency[i]) {
-
-                if (countryColor[neighbor] != -1) {
-
-                    colorAvailable[countryColor[neighbor]] = false;
-
-                }
-            }
-
-            int color;
-
-            for (color = 0; color <colors.size() && !colorAvailable[color]; ++color) {}
-
-            this.countryColor[i] = color;
-            Arrays.fill(colorAvailable, true);
-
-            refresh();
-
-        }
-    }
-
-    public void randomColoring() {
-
-        Arrays.fill(colorAvailable, true);
-        final Random random = new Random();
-
-        for (int i = 0; i < countries.size(); ++i) {
-
-            for (final int neighbor : adjacency[i]) {
-
-                if (countryColor[neighbor] != -1) {
-
-                    colorAvailable[countryColor[neighbor]] = false;
-
-                }
-            }
-
-            int color;
-
-            do {
-
-                color = random.nextInt(colors.size());
-
-                if (colorAvailable[color]) {
-
-                    countryColor[i] = color;
-                    break;
-
-                }
-
-            } while (!colorAvailable[color]);
-
-            Arrays.fill(colorAvailable, true);
-
-        }
-
-        refresh();
-
-    }
 
     public void addAdjacencyClicked(){
 
@@ -465,6 +331,33 @@ public class MapGUI {
 
     }
 
+    public int[] getCountryColor() {
+        return countryColor;
+    }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public void randomColoringClicked() {
+
+        MapLogic.randomColoring(colorAvailable,adjacency,countries,colors,countryColor);
+        refresh();
+    }
+
+    public void resetAllClicked() {
+
+        MapLogic.resetAll(countryColor);
+        refresh();
+
+    }
+
+    public void greedyColoringClicked() throws InterruptedException {
+
+        MapLogic.greedyColoring(colorAvailable,adjacency,countries,colors,countryColor);
+        refresh();
+
+    }
 
     class MotionHandler  implements MouseMotionListener  {
 
@@ -493,7 +386,7 @@ public class MapGUI {
         @Override
         public void mouseClicked(MouseEvent e) {
 
-            if (sourceName == "Add Adjacency") {
+            if (Objects.equals(sourceName, "Add Adjacency")) {
 
                 try {
 
@@ -527,7 +420,7 @@ public class MapGUI {
         public void mouseClicked(MouseEvent e) {
 
             country=Country.findCountry(e.getX(),e.getY(),countries);
-            colorTheCountry(country,colorObject);
+            MapLogic.colorTheCountry(country,colorObject,colorAvailable,adjacency,countries,colors,countryColor);
             refresh();
 
         }

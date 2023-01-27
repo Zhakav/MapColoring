@@ -16,22 +16,35 @@ public class MapFrame extends JFrame {
         JPanel UI = new JPanel(new BorderLayout(4, 4));
         JLabel output = map.getOutput();
 
+        Font font=new Font("Segoe Print",Font.BOLD,10);
+
         JButton color= new JButton("Color");
+        color.setFont(font);
+
         JButton greedy= new JButton("Greedy Coloring");
+        greedy.setFont(font);
+
         JButton random= new JButton("Random Coloring");
+        random.setFont(font);
+
         JButton reset= new JButton("Reset All");
+        reset.setFont(font);
+
         JButton addAdjacency= new JButton("Add Adjacency");
+        addAdjacency.setFont(font);
+
         JButton saveAdjacency= new JButton("Save Adjacency");
+        saveAdjacency.setFont(font);
 
-        JComboBox<String> comboBox =new JComboBox<>();
+        JButton saveColors= new JButton("Save Colors");
+        saveColors.setFont(font);
 
-        comboBox.addItem("Red");
-        comboBox.addItem("Blue");
-        comboBox.addItem("Green");
-        comboBox.addItem("Magenta");
-        comboBox.addItem("Yellow");
-        comboBox.addItem("Pink");
-        comboBox.addItem("Orange");
+        JButton openSavedColors= new JButton("Open Saved Colors");
+        openSavedColors.setFont(font);
+
+        JComboBox<String> comboBox =new ColorBox();
+
+        comboBox.setFont(font);
 
         JPanel controller = new JPanel(new FlowLayout());
 
@@ -40,6 +53,8 @@ public class MapFrame extends JFrame {
         controller.add(random);
         controller.add(reset);
         controller.add(comboBox);
+        controller.add(saveColors);
+        controller.add(openSavedColors);
         controller.add(addAdjacency);
         controller.add(saveAdjacency);
 
@@ -53,15 +68,15 @@ public class MapFrame extends JFrame {
 
         greedy.addActionListener((ActionEvent ae)->{
             try {
-                map.greedyColoring();
+                map.greedyColoringClicked();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
 
-        random.addActionListener((ActionEvent ae)-> map.randomColoring() );
+        random.addActionListener((ActionEvent ae)-> map.randomColoringClicked() );
 
-        reset.addActionListener((ActionEvent ae)-> map.resetAll() );
+        reset.addActionListener((ActionEvent ae)-> map.resetAllClicked() );
 
         addAdjacency.addActionListener((ActionEvent ae)-> map.addAdjacencyClicked() );
 
@@ -70,6 +85,13 @@ public class MapFrame extends JFrame {
         color.addActionListener((ActionEvent ae)-> map.colorClicked((String) comboBox.getSelectedItem()) );
 
         comboBox.addActionListener((ActionEvent ae)-> map.colorClicked((String) comboBox.getSelectedItem()) );
+
+        saveColors.addActionListener((ActionEvent ae)->{
+
+            SaveColorFrame saveColorFrame=new SaveColorFrame(new DataBase(map.getMapName()), map.getCountryColor());
+            saveColorFrame.setVisible(true);
+
+        });
 
 
 

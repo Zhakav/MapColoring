@@ -5,27 +5,32 @@ public class WelcomeFrame extends JFrame {
     WelcomeFrame(){
 
         FlowLayout layout=new FlowLayout();
-        layout.setHgap(10);
-        layout.setVgap(30);
+        layout.setHgap(30);
+        layout.setVgap(20);
+
+        setResizable(false);
+
+        Font font=new Font("Segoe Print",Font.BOLD,12);
 
         setLayout(layout);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
 
-        setSize(500,200);
+        setSize(600,150);
 
         JLabel welcome=new JLabel();
-        Font font=new Font("Bahnschrift SemiLight Condensed",Font.BOLD,13);
-        welcome.setFont(font);
+        welcome.setFont(new Font("Segoe Print",Font.BOLD,17));
         welcome.setText("Welcome. Please choose your map or create new one to continue.");
         welcome.setSize(500,100);
         add(welcome);
 
         String items[]={"IRAN","UNITED STATES","WORLD"};
         JComboBox<String> mapsName=new JComboBox<>(items);
+        mapsName.setFont(font);
         add(mapsName);
 
         JButton bContinue= new JButton("Continue");
+        bContinue.setFont(font);
         add(bContinue);
         
         bContinue.addActionListener(ae ->{
@@ -37,10 +42,20 @@ public class WelcomeFrame extends JFrame {
         });
 
         JButton bOpen= new JButton("Open map");
+        bOpen.setFont(font);
         add(bOpen);
 
         JButton bCreate= new JButton("Create map");
+        bCreate.setFont(font);
         add(bCreate);
+
+        bCreate.addActionListener(ae->{
+
+            UserDefinedMapGUI userDefined=new UserDefinedMapGUI();
+            this.setVisible(false);
+            userDefined.setVisible(true);
+
+        });
     }
 
 }
