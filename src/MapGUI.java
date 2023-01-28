@@ -347,7 +347,7 @@ public class MapGUI {
 
     public void resetAllClicked() {
 
-        MapLogic.resetAll(countryColor);
+        MapLogic.resetColors(countryColor);
         refresh();
 
     }

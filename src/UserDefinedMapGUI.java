@@ -1,8 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,83 +13,81 @@ public class UserDefinedMapGUI extends JFrame {
     private HashMap<Integer,Color>  colors;
     private LinkedList<Integer>[] adjacency;
     private boolean[] colorAvailable;
+    private ArrayList<String> saveNames;
     private int[] countryColor;
-    private String[] saveNames;
 
-    Color fillColor=Color.RED;
+    private JMenu file,actions,color,open;
+    private JMenuItem save,close,greedyColoring,randomColoring,resetColors,resetMap;
+    private JMenuBar menuBar;
+    private JRadioButtonMenuItem red,blue,green,magenta,yellow,pink,orange;
+    private ButtonGroup buttonGroup;
+
+    private Color fillColor=Color.RED;
 
     UserDefinedMapGUI(){
 
         this.setSize(1600,800);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        saveNames=new FileReaderWriter().readStrings("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\UserDefined\\SaveNames.data");
-        countries=new HashMap<>();
-        colors=new HashMap<>();
-        adjacency=new LinkedList[500];
-        colorAvailable=new boolean[500];
-        Arrays.fill(colorAvailable,true);
-        countryColor=new int[500];
-        Arrays.fill(countryColor,-1);
+        initUnits();
 
-        MyColor.setColors(colors);
+        initGUI();
 
-        JComboBox<String> comboBox =new ColorBox();
-        comboBox.setSize(100,50);
-        comboBox.addActionListener(ae-> fillColor=MyColor.colorStringToObject(String.valueOf(comboBox.getSelectedItem())));
+        createSaveItems();
 
-        JButton greedyColoring=new JButton("Greedy Coloring");
-        greedyColoring.addActionListener(ae->{
-
-            try {
-                MapLogic.greedyColoring(colorAvailable,adjacency,countries,colors,countryColor);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            repaint();
-
-        });
-
-        JButton randomColoring=new JButton("Random Coloring");
-        randomColoring.addActionListener(ae->{
-
-            MapLogic.randomColoring(colorAvailable,adjacency,countries,colors,countryColor);
-            repaint();
-
-        });
-
-        JButton resetAll=new JButton("Reset All");
-        resetAll.addActionListener(ae->{
-
-            MapLogic.resetAll(countryColor);
-            repaint();
-
-        });
-
-        JButton save=new JButton("Save");
-        save.addActionListener(ae->{
-
-            SaveMapFrame saveMapFrame=new SaveMapFrame(countries,countryColor,saveNames,adjacency);
-            saveMapFrame.setVisible(true);
-
-        });
-
-
-        JPanel controller=new JPanel(new FlowLayout());
-        controller.setSize(100,80);
-        controller.setBackground(new Color(133,182,176));
-        controller.add(comboBox);
-        controller.add(greedyColoring);
-        controller.add(randomColoring);
-        controller.add(save);
+//        JComboBox<String> comboBox =new ColorBox();
+//        comboBox.setSize(100,50);
+//        comboBox.addActionListener(ae-> fillColor=MyColor.colorStringToObject(String.valueOf(comboBox.getSelectedItem())));
+//
+//        JButton greedyColoring=new JButton("Greedy Coloring");
+//        greedyColoring.addActionListener(ae->{
+//
+//            try {
+//                MapLogic.greedyColoring(colorAvailable,adjacency,countries,colors,countryColor);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            repaint();
+//
+//        });
+//
+//        JButton randomColoring=new JButton("Random Coloring");
+//        randomColoring.addActionListener(ae->{
+//
+//            MapLogic.randomColoring(colorAvailable,adjacency,countries,colors,countryColor);
+//            repaint();
+//
+//        });
+//
+//        JButton resetAll=new JButton("Reset All");
+//        resetAll.addActionListener(ae->{
+//
+//            MapLogic.resetColors(countryColor);
+//            repaint();
+//
+//        });
+//
+//        JButton save=new JButton("Save");
+//        save.addActionListener(ae->{
+//
+//            SaveMapFrame saveMapFrame=new SaveMapFrame(countries,countryColor,saveNames,adjacency);
+//            saveMapFrame.setVisible(true);
+//
+//        });
+//
+//
+//        JPanel controller=new JPanel(new FlowLayout());
+//        controller.setSize(100,80);
+//        controller.setBackground(new Color(133,182,176));
+//        controller.add(comboBox);
+//        controller.add(greedyColoring);
+//        controller.add(randomColoring);
+//        controller.add(save);
 
         this.add(new MapBackground(),BorderLayout.CENTER);
-        this.add(controller,BorderLayout.SOUTH);
+        //this.add(controller,BorderLayout.SOUTH);
 
         this.setResizable(false);
-
-        FileReaderWriter frw=new FileReaderWriter();
-        frw.writeStrings(new String[500],"S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\UserDefined\\SaveNames.data");
 
     }
 
@@ -254,5 +250,227 @@ public class UserDefinedMapGUI extends JFrame {
 
     }
 
+    private void initUnits(){
+
+        saveNames=new FileReaderWriter().readSaveNames("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\UserDefined\\SaveNames.data");
+        countries=new HashMap<>();
+        colors=new HashMap<>();
+        adjacency=new LinkedList[500];
+        colorAvailable=new boolean[500];
+        Arrays.fill(colorAvailable,true);
+        countryColor=new int[500];
+        Arrays.fill(countryColor,-1);
+        MyColor.setColors(colors);
+
+    }
+
+    private void initGUI(){
+
+        //Defining MenuItems
+
+        ///File
+        open=new JMenu("Open");
+        save=new JMenuItem("Save");
+        close=new JMenuItem("Close");
+
+        ///Actions
+        greedyColoring=new JMenuItem("Greedy Coloring");
+        randomColoring=new JMenuItem("RandomColoring");
+        resetColors=new JMenuItem("Reset Colors");
+        resetMap=new JMenuItem("Reset Map");
+
+        ///Colors
+        buttonGroup=new ButtonGroup();
+        red=new JRadioButtonMenuItem("Red");
+        blue=new JRadioButtonMenuItem("Blue");
+        green=new JRadioButtonMenuItem("Green");
+        magenta=new JRadioButtonMenuItem("Magenta");
+        yellow=new JRadioButtonMenuItem("Yellow");
+        pink=new JRadioButtonMenuItem("Pink");
+        orange=new JRadioButtonMenuItem("Orange");
+
+
+        //Adding Listeners
+        greedyColoring.addActionListener(ae->{
+
+            try {
+                MapLogic.greedyColoring(colorAvailable,adjacency,countries,colors,countryColor);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            repaint();
+
+        });
+        randomColoring.addActionListener(ae->{
+
+            MapLogic.randomColoring(colorAvailable,adjacency,countries,colors,countryColor);
+            repaint();
+
+        });
+        resetColors.addActionListener(ae->{
+
+            MapLogic.resetColors(countryColor);
+            repaint();
+
+        });
+        resetMap.addActionListener(ae->{
+
+            countries=new HashMap<>();
+            adjacency=new LinkedList[500];
+            countryColor=new int[500];
+            repaint();
+        });
+        save.addActionListener(ae->{
+
+            SaveMapFrame saveMapFrame=new SaveMapFrame(countries,countryColor,saveNames,adjacency);
+            saveMapFrame.setVisible(true);
+
+        });
+
+        ///Color Listeners
+        red.addItemListener(l->{
+
+            if(red.isSelected())
+
+                fillColor=MyColor.colorStringToObject(red.getText());
+
+        });
+        blue.addItemListener(l->{
+
+            if(blue.isSelected())
+
+                fillColor=MyColor.colorStringToObject(blue.getText());
+
+        });
+        magenta.addItemListener(l->{
+
+            if(magenta.isSelected())
+
+                fillColor=MyColor.colorStringToObject(magenta.getText());
+
+        });
+        green.addItemListener(l->{
+
+            if(green.isSelected())
+
+                fillColor=MyColor.colorStringToObject(green.getText());
+
+        });
+        yellow.addItemListener(l->{
+
+            if(yellow.isSelected())
+
+                fillColor=MyColor.colorStringToObject(yellow.getText());
+
+        });
+        pink.addItemListener(l->{
+
+            if(pink.isSelected())
+
+                fillColor=MyColor.colorStringToObject(pink.getText());
+
+        });
+        orange.addItemListener(l->{
+
+            if(orange.isSelected())
+
+                fillColor=MyColor.colorStringToObject(orange.getText());
+
+        });
+
+
+        //Defining Menus
+        file=new JMenu("File");
+        actions=new JMenu("Actions");
+        color=new JMenu("Colors");
+
+        //Adding MenuItems
+
+        ///File
+        file.add(open);
+        file.add(save);
+        file.add(close);
+
+        ///Actions
+        actions.add(greedyColoring);
+        actions.add(randomColoring);
+        actions.add(resetColors);
+        actions.add(resetMap);
+
+        ///Colors
+        buttonGroup.add(red);
+        buttonGroup.add(blue);
+        buttonGroup.add(green);
+        buttonGroup.add(magenta);
+        buttonGroup.add(yellow);
+        buttonGroup.add(pink);
+        buttonGroup.add(orange);
+
+        color.add(red);
+        color.add(blue);
+        color.add(green);
+        color.add(magenta);
+        color.add(yellow);
+        color.add(pink);
+        color.add(orange);
+
+
+
+
+        //Defining MenuBar
+        menuBar=new JMenuBar();
+        menuBar.add(file);
+        menuBar.add(actions);
+        menuBar.add(color);
+
+        //Setting MenuBar
+        this.setJMenuBar(menuBar);
+
+    }
+
+    private void createSaveItems(){
+
+        if(saveNames!=null) {
+
+            JMenuItem saveItem;
+            open.removeAll();
+            for (String save : saveNames) {
+
+                if (save==null) {
+                    System.out.println("Save is Null");
+                    break;
+                }
+
+                saveItem = new JMenuItem(save);
+                saveItem.addActionListener(new SaveHandler(save));
+                open.add(saveItem);
+
+            }
+        }
+
+    }
+
+    private class SaveHandler implements ActionListener{
+
+        String saveName;
+        FileReaderWriter fileReaderWriter;
+
+        SaveHandler(String saveName){
+
+            this.saveName=saveName;
+            this.fileReaderWriter=new FileReaderWriter();
+
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            countries=fileReaderWriter.readShapes("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\UserDefined\\Countries" + saveName +  ".data");
+            countryColor=fileReaderWriter.readIntegers("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\UserDefined\\CountryColor" + saveName +".data");
+            adjacency=fileReaderWriter.readAdjacency("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\UserDefined\\Adjacency" + saveName +".data");
+            repaint();
+
+        }
+    }
 
 }

@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -38,12 +39,12 @@ public class FileReaderWriter {
 
     }
 
-    public void writeStrings(String[] strings , String filePath){
+    public void writeSaveNames(ArrayList<String> saveNAmes , String filePath){
 
         try {
             FileOutputStream output = new FileOutputStream(filePath);
             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
-            objectOutput.writeObject(strings);
+            objectOutput.writeObject(saveNAmes);
 
             output.close();
             objectOutput.close();
@@ -52,21 +53,21 @@ public class FileReaderWriter {
 
     }
 
-    public String[] readStrings(String filePath){
+    public ArrayList<String> readSaveNames(String filePath){
 
-        String[] strings=null;
+        ArrayList<String> saveNames=null;
 
         try {
             FileInputStream input = new FileInputStream(filePath);
             ObjectInputStream objectInput = new ObjectInputStream(input);
-            strings = (String[]) objectInput.readObject();
+            saveNames = (ArrayList<String>) objectInput.readObject();
 
             input.close();
             objectInput.close();
 
         } catch (Exception e){e.printStackTrace();}
 
-        return strings;
+        return saveNames;
 
     }
 

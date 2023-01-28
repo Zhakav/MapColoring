@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -8,14 +9,14 @@ import static javax.swing.JOptionPane.showMessageDialog;
 
 public class SaveMapFrame extends JFrame {
 
-    String[] saveNames;
+    ArrayList<String> saveNames;
     HashMap<Integer,Shape> countries;
     int[] countryColor;
     private LinkedList<Integer>[] adjacency;
     String name;
     FileReaderWriter fileReaderWriter;
 
-    SaveMapFrame(HashMap<Integer,Shape> countries , int[] countryColor,String[] saveNames,LinkedList<Integer>[] adjacency){
+    SaveMapFrame(HashMap<Integer,Shape> countries , int[] countryColor, ArrayList<String> saveNames, LinkedList<Integer>[] adjacency){
 
         this.countries=countries;
         this.countryColor=countryColor;
@@ -98,17 +99,9 @@ public class SaveMapFrame extends JFrame {
     private boolean restoreSaveNames(){
 
 
-        for (int i=0 ; i<saveNames.length;i++ ){
+        saveNames.add(name);
 
-            if (saveNames[i]==null){
-
-                saveNames[i]=name;
-
-            }
-
-        }
-
-        fileReaderWriter.writeStrings(saveNames,"S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\UserDefined\\SaveNames.data");
+        fileReaderWriter.writeSaveNames(saveNames,"S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\UserDefined\\SaveNames.data");
 
         return true;
 

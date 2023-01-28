@@ -76,11 +76,19 @@ public class MapLogic {
     }
 
 
-    protected static void resetAll(int[] countryColor) {
+    protected static void resetColors(int[] countryColor) {
 
         Arrays.fill(countryColor, -1);
 
     }
+
+//    protected static void resetAll( LinkedList<Integer>[] adjacency, HashMap<Integer,Shape> countries
+//            ,HashMap<Integer,Color> colors,int[] countryColor){
+//
+//
+//
+//
+//    }
 
     protected static void randomColoring(boolean[] colorAvailable , LinkedList<Integer>[] adjacency,
                                          HashMap<Integer,Shape> countries,HashMap<Integer,Color> colors,
