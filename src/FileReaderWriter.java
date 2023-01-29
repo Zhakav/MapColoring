@@ -28,7 +28,7 @@ public class FileReaderWriter {
         try {
             FileInputStream input = new FileInputStream(filePath);
             ObjectInputStream objectInput = new ObjectInputStream(input);
-            countries = (HashMap<Integer, Shape>) objectInput.readObject();
+            countries =  (HashMap<Integer, Shape>) objectInput.readObject();
 
             input.close();
             objectInput.close();

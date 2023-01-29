@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Main
 {
@@ -8,6 +9,11 @@ public class Main
 
         WelcomeFrame welcomeFrame=new WelcomeFrame();
         welcomeFrame.setVisible(true);
+
+//       FileReaderWriter fileReaderWriter=new FileReaderWriter();
+//      fileReaderWriter.writeSaveNames(new ArrayList<>(),"S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\Ger\\SaveNames.data");
+//       fileReaderWriter.writeSaveNames(new ArrayList<>(),"S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\Fra\\SaveNames.data");
+//       fileReaderWriter.writeSaveNames(new ArrayList<>(),"S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\Euro\\SaveNames.data");
 
         //SaveColorFrame saveColorFrame=new SaveColorFrame();
         //saveColorFrame.setVisible(true);

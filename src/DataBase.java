@@ -79,9 +79,6 @@ public class DataBase {
                 neighbor1=resultSet.getInt("Neighbor_id1");
                 neighbor2=resultSet.getInt("Neighbor_id2");
 
-                System.out.println(neighbor1 + " " +neighbor2);
-
-
                 adjacency[neighbor1].add(neighbor2);
                 adjacency[neighbor2].add(neighbor1);
 

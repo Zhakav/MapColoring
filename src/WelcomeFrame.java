@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class WelcomeFrame extends JFrame {
 
     WelcomeFrame(){
@@ -20,11 +23,11 @@ public class WelcomeFrame extends JFrame {
 
         JLabel welcome=new JLabel();
         welcome.setFont(new Font("Segoe Print",Font.BOLD,17));
-        welcome.setText("Welcome. Please choose your map or create new one to continue.");
+        welcome.setText("Welcome. Please Choose A Map Or Create New One To Continue.");
         welcome.setSize(500,100);
         add(welcome);
 
-        String items[]={"IRAN","UNITED STATES","WORLD"};
+        String items[]={"IRAN","UNITED STATES","FRANCE","GERMANY","EUROPE"};
         JComboBox<String> mapsName=new JComboBox<>(items);
         mapsName.setFont(font);
         add(mapsName);
@@ -39,11 +42,8 @@ public class WelcomeFrame extends JFrame {
             this.setVisible(false);
             frame.setVisible(true);
 
-        });
 
-        JButton bOpen= new JButton("Open map");
-        bOpen.setFont(font);
-        add(bOpen);
+        });
 
         JButton bCreate= new JButton("Create map");
         bCreate.setFont(font);
@@ -51,9 +51,10 @@ public class WelcomeFrame extends JFrame {
 
         bCreate.addActionListener(ae->{
 
-            UserDefinedMapGUI userDefined=new UserDefinedMapGUI();
+            UserDefinedMapGUI userDefined=new UserDefinedMapGUI("User Defined Map");
             this.setVisible(false);
             userDefined.setVisible(true);
+            showMessageDialog(null, "Create The Shapes By Clicking And Dragging The Mouse.\nYou Can Perform Your Desired Actions In MenuBar.", "Information", JOptionPane.INFORMATION_MESSAGE);
 
         });
     }

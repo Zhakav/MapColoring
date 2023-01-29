@@ -21,10 +21,12 @@ public class MapGUI {
     private HashMap<Integer,Color>  colors;
     private LinkedList<Integer>[] adjacency;
     private final JLabel output = new JLabel();
-    private  String mapName;
+    private String mapName;
+    private String mapFullName;
     
     private boolean[] colorAvailable;
     private int[] countryColor;
+    private ArrayList<String> saveNames;
     
     private Shape[] twoPoints;
     private int twoPointsCounter=0;
@@ -49,6 +51,7 @@ public class MapGUI {
 
 
         String mapFileName;
+        this.mapFullName=mapName;
 
         switch (mapName) {
             case "IRAN" -> {
@@ -63,9 +66,23 @@ public class MapGUI {
                 mapFileName = "World.png";
                 this.mapName = "World";
             }
+            case "GERMANY" -> {
+                mapFileName = "Ger.jpg";
+                this.mapName = "Ger";
+            }
+            case "FRANCE" -> {
+                mapFileName = "Fra.jpg";
+                this.mapName = "Fra";
+            }
+            case "EUROPE" -> {
+                mapFileName = "Euro.jpg";
+                this.mapName = "Euro";
+            }
+
             default -> throw new Exception("Invalid Unused.Map!!!");
         }
 
+        saveNames=new FileReaderWriter().readSaveNames("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\" + this.mapName +"\\SaveNames.data");
         image=readImage("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Maps\\" + mapFileName);
         createMap(image);
         output.addMouseMotionListener(new MotionHandler());
@@ -144,6 +161,8 @@ public class MapGUI {
 
         BufferedImage bufferedImage =new BufferedImage(image.getWidth()  , image.getHeight() , BufferedImage.SCALE_DEFAULT);
         Graphics2D graphic= bufferedImage.createGraphics();
+
+        graphic.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.50f));
 
         graphic.drawImage(image , 0 , 0 , output);
         graphic.setColor(Color.white);
@@ -273,7 +292,6 @@ public class MapGUI {
 
     }
 
-
     private void addAdjacency(Point mouseLocation) {
 
         Point labelPoint = output.getLocationOnScreen();
@@ -318,7 +336,7 @@ public class MapGUI {
         DataBase dataBase=new DataBase(mapName);
         dataBase.saveToDatabase(adjacency);
         dataBase.closeConnection();
-        showMessageDialog(null, "Adjacency Saved Successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
+        showMessageDialog(null, "Adjacency Saved Successfully.", "Information", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
@@ -331,12 +349,24 @@ public class MapGUI {
 
     }
 
+    public ArrayList<String> getSaveNames() {
+        return saveNames;
+    }
+
     public int[] getCountryColor() {
         return countryColor;
     }
 
     public String getMapName() {
         return mapName;
+    }
+
+    public LinkedList<Integer>[] getAdjacency() {
+        return adjacency;
+    }
+
+    public HashMap<Integer, Shape> getCountries() {
+        return countries;
     }
 
     public void randomColoringClicked() {
@@ -352,6 +382,7 @@ public class MapGUI {
 
     }
 
+
     public void greedyColoringClicked() throws InterruptedException {
 
         MapLogic.greedyColoring(colorAvailable,adjacency,countries,colors,countryColor);
@@ -359,7 +390,36 @@ public class MapGUI {
 
     }
 
-    class MotionHandler  implements MouseMotionListener  {
+    public ArrayList<JMenuItem> createSaveItems(){
+
+        ArrayList<String> saveNames =this.getSaveNames();
+        ArrayList<JMenuItem> menuItems=new ArrayList<>();
+
+        if(saveNames!=null) {
+
+            JMenuItem saveItem;
+            for (String save : saveNames) {
+
+                if (save==null) {
+                    break;
+                }
+
+                saveItem = new JMenuItem(save);
+                saveItem.addActionListener(new SaveHandler(save,this.mapName));
+                menuItems.add(saveItem);
+
+            }
+        }
+
+        return menuItems;
+
+    }
+
+    public String getMapFullName() {
+        return mapFullName;
+    }
+
+    private class MotionHandler  implements MouseMotionListener  {
 
         @Override
         public void mouseDragged(MouseEvent e) {
@@ -375,7 +435,7 @@ public class MapGUI {
 
     }
 
-    class AdjacencyHandler extends MouseAdapter{
+    private class AdjacencyHandler extends MouseAdapter{
 
         String sourceName;
 
@@ -403,7 +463,7 @@ public class MapGUI {
         }
     }
 
-    class ColorHandler extends MouseAdapter {
+    private class ColorHandler extends MouseAdapter {
 
         String colorString;
         Color colorObject;
@@ -427,5 +487,34 @@ public class MapGUI {
 
 
     }
+
+     private class SaveHandler implements ActionListener{
+
+        String saveName;
+        String mapName;
+
+        FileReaderWriter fileReaderWriter;
+
+        SaveHandler(String saveName,String mapName){
+
+            this.saveName=saveName;
+            this.mapName=mapName;
+            this.fileReaderWriter=new FileReaderWriter();
+
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            countries=fileReaderWriter.readShapes("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\"+ this.mapName + "\\Countries" + saveName +  ".data");
+            countryColor=fileReaderWriter.readIntegers("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\"+ this.mapName +"\\CountryColor" + saveName +".data");
+            adjacency=fileReaderWriter.readAdjacency("S:\\programing\\Java\\Udemy\\JavaFx\\MapColoring\\src\\Saves\\"+ this.mapName +"\\Adjacency" + saveName +".data");
+            refresh();
+
+        }
+
+    }
+
+
 
 }

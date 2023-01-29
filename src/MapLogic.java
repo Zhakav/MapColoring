@@ -171,7 +171,8 @@ public class MapLogic {
     protected static void greedyColoring(boolean[] colorAvailable , LinkedList<Integer>[] adjacency,
                                          HashMap<Integer,Shape> countries,HashMap<Integer,Color> colors,
                                          int[] countryColor) throws InterruptedException {
-
+        int maxNumberOfColors=0;
+        Arrays.fill(countryColor,-1);
         countryColor[0] = 0;
         Arrays.fill(colorAvailable, true);
 
@@ -191,9 +192,20 @@ public class MapLogic {
             for (color = 0; color <colors.size() && !colorAvailable[color]; ++color) {}
 
             countryColor[i] = color;
+
+            if(maxNumberOfColors<color){
+
+                maxNumberOfColors=color;
+
+            }
+
             Arrays.fill(colorAvailable, true);
 
         }
+
+        showMessageDialog(null, "Number Of Colors Needed For Greedy Coloring : "+ ++maxNumberOfColors, "Information", JOptionPane.INFORMATION_MESSAGE);
+
+
     }
 
 }

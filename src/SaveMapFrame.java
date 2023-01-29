@@ -45,7 +45,7 @@ public class SaveMapFrame extends JFrame {
 
             if(name.isBlank()){
 
-                showMessageDialog(null, "Save Name Cant Be Empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                showMessageDialog(null, "Save Name Can't Be Empty!", "Error", JOptionPane.ERROR_MESSAGE);
 
             }else if(duplicateNames(name)){
 
