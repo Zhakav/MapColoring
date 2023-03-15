@@ -138,15 +138,6 @@ public class UserDefinedMapGUI extends JFrame {
                 }
             }
 
-            /*for (Shape country : countries.values()) {
-
-                graphic2D.setPaint(Color.BLACK);
-                graphic2D.draw(country);
-                graphic2D.setColor(colors.get(countryColor[(Country.getCountryKey(country,countries))]));
-                graphic2D.fill(country);
-
-            }*/
-
             if (start != null && end != null) {
 
                 graphic2D.setPaint(Color.LIGHT_GRAY);

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="30efa805-7917-4288-8264-1a605b654a64" name="Changes" comment="" />
+    <list default="true" id="30efa805-7917-4288-8264-1a605b654a64" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,17 +38,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/Saves/Ger" />
-    <property name="project.structure.last.edited" value="Libraries" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "S:/programing/Java/Udemy/JavaFx/MapColoring"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="S:\programing\Java\Udemy\JavaFx\MapColoring\src\Saves\Ger" />
@@ -128,7 +129,12 @@
       <workItem from="1674985867441" duration="3664000" />
       <workItem from="1674992785555" duration="5552000" />
       <workItem from="1675002049842" duration="1052000" />
-      <workItem from="1675005331537" duration="3979000" />
+      <workItem from="1675005331537" duration="4434000" />
+      <workItem from="1675057476839" duration="42000" />
+      <workItem from="1675057546739" duration="2672000" />
+      <workItem from="1675060769942" duration="253000" />
+      <workItem from="1675061434840" duration="4150000" />
+      <workItem from="1675066089546" duration="941000" />
     </task>
     <servers />
   </component>
@@ -180,7 +186,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/UserDefinedMapGUI.java</url>
-          <line>272</line>
+          <line>263</line>
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
